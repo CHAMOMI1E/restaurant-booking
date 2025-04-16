@@ -1,11 +1,14 @@
 from fastapi import FastAPI
-from .routers import tables, reservations
+from app.routers import table_router
 
-app = FastAPI()
+# from .routers import tables, reservations
 
-app.include_router(tables.router)
-app.include_router(reservations.router)
+app = FastAPI(version="0.0.1b", title="Restaurant booking API")
 
-@app.get("/")
-def root():
+app.include_router(router=table_router, tags=["Столы"])
+# app.include_router(reservations.router)
+
+
+@app.get(path="/", tags=["Greetings"])
+async def root():
     return {"message": "Restaurant Booking API"}

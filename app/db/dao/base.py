@@ -2,7 +2,7 @@ from typing import List, Any, Dict
 from sqlalchemy import select, desc, update, delete
 from sqlalchemy.exc import SQLAlchemyError, MultipleResultsFound
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from fastapi import HTTPException
 
 
 class BaseDAO:
@@ -53,7 +53,6 @@ class BaseDAO:
         records = result.unique().scalars().all()
         return records
 
-
     @classmethod
     async def edit(
         cls,
@@ -75,7 +74,14 @@ class BaseDAO:
         result = await session.execute(query)
         try:
             await session.commit()
-            return result.scalar_one_or_none()
+            r = result.scalar_one_or_none()
+            if r:
+                return r
+            else:
+                raise HTTPException(status_code=404, detail={"message": "Не найдено"})
         except SQLAlchemyError:
             await session.rollback()
-            return None
+            raise HTTPException(
+                status_code=500,
+                detail={"message": "Ошибка сервера, попробуйте попытку позже"},
+            )
