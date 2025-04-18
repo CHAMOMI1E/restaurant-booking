@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from app.routers import table_router, reservation_router
 
-# from .routers import tables, reservations
 
 app = FastAPI(version="0.0.1b", title="Restaurant booking API", debug=True)
 

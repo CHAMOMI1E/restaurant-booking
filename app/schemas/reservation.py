@@ -25,11 +25,9 @@ class ReservationCreate(ReservationBase):
         else:
             raise TypeError("reservation_time должен быть строкой или datetime")
 
-        # Удаляем временную зону (делаем offset-naive)
         if dt.tzinfo is not None:
             dt = dt.replace(tzinfo=None)
 
-        # Проверка на прошлое время
         current_time = datetime.utcnow().replace(tzinfo=None)
         if dt < current_time:
             raise ValueError(
