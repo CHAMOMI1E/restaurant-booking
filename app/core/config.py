@@ -2,11 +2,11 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    db_host: str = "localhost"
+    db_host: str = "db"
     db_port: str = "5432"
-    db_user: str = "postgres"
-    db_password: str = "02082002"
-    db_name: str = "booking_db"
+    db_user: str = "myuser"
+    db_password: str = "mypassword"
+    db_name: str = "mydatabase"
 
     @property
     def db_url(self):
