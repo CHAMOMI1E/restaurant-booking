@@ -14,6 +14,6 @@ async def get_all_tables(db: AsyncSession) -> List[Table]:
     return r
 
 
-async def delete_table(table_id: int, db: AsyncSession) -> bool:
+async def delete_table(table_id: int, db: AsyncSession):
     r = await TableDAO.delete_base(session=db, id=table_id)
     return r

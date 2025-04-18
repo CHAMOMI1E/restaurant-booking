@@ -1,13 +1,15 @@
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Type, TypeVar
 from sqlalchemy import select, desc, update, delete
 from sqlalchemy.exc import SQLAlchemyError, MultipleResultsFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 
 
+ModelType = TypeVar("ModelType")
+
+
 class BaseDAO:
-    model = None
-    pydantic_model = None
+    model: Type[ModelType] = None
 
     @classmethod
     async def add(cls, session: AsyncSession, **values):
@@ -18,6 +20,10 @@ class BaseDAO:
             await session.commit()
         except SQLAlchemyError:
             await session.rollback()
+            raise HTTPException(
+                status_code=500,
+                detail={"message": "Ошибка сервера, попробуйте попытку позже"},
+            )
         return new_instance
 
     @classmethod
@@ -48,10 +54,18 @@ class BaseDAO:
 
     @classmethod
     async def get_all(cls, session: AsyncSession, **filter_by):
-        query = select(cls.model).filter_by(**filter_by).order_by(desc(cls.model.id))
-        result = await session.execute(query)
-        records = result.unique().scalars().all()
-        return records
+        try:
+            query = (
+                select(cls.model).filter_by(**filter_by).order_by(desc(cls.model.id))
+            )
+            result = await session.execute(query)
+            records = result.unique().scalars().all()
+            return records
+        except SQLAlchemyError:
+            raise HTTPException(
+                status_code=500,
+                detail={"message": "Ошибка сервера, попробуйте попытку позже"},
+            )
 
     @classmethod
     async def edit(

@@ -1,8 +1,8 @@
 """init migration
 
-Revision ID: 3515b3914f75
+Revision ID: b4d4dd1e1be0
 Revises:
-Create Date: 2025-04-16 14:04:13.492885
+Create Date: 2025-04-17 15:19:21.977547
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "3515b3914f75"
+revision: str = "b4d4dd1e1be0"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,22 +25,19 @@ def upgrade() -> None:
     op.create_table(
         "table",
         sa.Column("name", sa.String(), nullable=False),
-        sa.Column("seets", sa.Integer(), nullable=False),
+        sa.Column("seats", sa.Integer(), nullable=False),
         sa.Column("location", sa.String(), nullable=False),
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "reservation",
-        sa.Column("custmer_name", sa.String(), nullable=False),
+        sa.Column("customer_name", sa.String(), nullable=False),
         sa.Column("table_id", sa.Integer(), nullable=False),
         sa.Column("reservation_time", sa.DateTime(), nullable=False),
         sa.Column("duration_minutes", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
-        sa.ForeignKeyConstraint(
-            ["table_id"],
-            ["table.id"],
-        ),
+        sa.ForeignKeyConstraint(["table_id"], ["table.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

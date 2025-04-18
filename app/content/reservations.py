@@ -1,7 +1,19 @@
 from fastapi import status
 
 
-delete_table_docs = {
+get_reservations_docs = {
+    status.HTTP_500_INTERNAL_SERVER_ERROR: {
+        "description": "Ошибка сервера",
+        "content": {
+            "application/json": {
+                "example": {"message": "Ошибка сервера, попробуйте попытку позже"}
+            }
+        },
+    },
+}
+
+
+delete_reservation_docs = {
     status.HTTP_204_NO_CONTENT: {"description": "Успешное удаление", "content": None},
     status.HTTP_404_NOT_FOUND: {
         "description": "Объект не найден",
@@ -22,7 +34,7 @@ delete_table_docs = {
                 "example": {
                     "detail": [
                         {
-                            "loc": ["table_id"],
+                            "loc": ["reservation_id"],
                             "msg": "value is not a valid integer",
                             "type": "type_error.integer",
                         }
@@ -34,43 +46,17 @@ delete_table_docs = {
 }
 
 
-get_table_docs = {
-    status.HTTP_200_OK: {
-        "description": "Успешное получение данных",
-        "content": {
-            "application/json": {
-                "example": [
-                    {
-                        "id": 0,
-                        "name": "Название столика",
-                        "seats": 1,
-                        "location": "Местонахождение",
-                    }
-                ]
-            }
-        },
-    },
-    status.HTTP_500_INTERNAL_SERVER_ERROR: {
-        "description": "Ошибка сервера",
-        "content": {
-            "application/json": {
-                "example": {"message": "Ошибка сервера, попробуйте попытку позже"}
-            }
-        },
-    },
-}
-
-
-add_table_docs = {
+add_reservation_docs = {
     status.HTTP_200_OK: {
         "description": "Успешное добавление данных",
         "content": {
             "application/json": {
                 "example": {
+                    "customer_name": "Имя",
+                    "table_id": 1,
+                    "reservation_time": "2025-04-17T13:17:49.282Z",
+                    "duration_minutes": 1,
                     "id": 0,
-                    "name": "Название столика",
-                    "seats": 1,
-                    "location": "Местонахождение",
                 }
             }
         },
